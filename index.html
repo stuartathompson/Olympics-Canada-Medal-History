@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="jquery.js" type="text/javascript"></script>
+<link rel="stylesheet" href="http://beta.images.theglobeandmail.com/media/www/css/global.fonts.css">
+
+<script src="d3.v2.min.js" type="text/javascript"></script>
+<!--[if lt IE 9]>
+	<style>
+	#viz{
+		display:none !important;
+	}
+	#viz-fallback{
+		display:block !important;
+	}
+	</stye>
+<![endif]-->
+<style type="text/css">
+#gi{
+	width:640px;
+	margin:0 auto;
+}
+#viz-gif{
+	text-align: center;
+}
+#gi h1{
+	font-family:"PrattHeavy",sans-serif;
+	font-size:35px;
+	line-height:1;
+	font-weight: normal;
+	margin:15px 0;
+}
+#gi p{
+	width:100%;
+	margin:10px 0 15px;
+	font-size:12px;
+	font-family:"Verdana",Arial,Helvetica,sans-serif;
+	line-height:1.5;
+}
+#viz{
+	width:570px;
+	margin:0 auto;
+	margin-top:-50px;
+}
+#viz-fallback{
+	display:none;
+}
+#gi-lede p{
+	font-family:"OpenSans",sans-serif;
+	font-size:14px;
+}
+/* Smartphones -------------------------------*/
+@media screen and (max-width: 480px) {
+	#gi, #gi p{
+		width:100%;
+	}
+	#viz-fallback{
+		display:block;
+	}
+	#viz{
+		display:none;
+	}
+}
+</style>
+<div id="gi">
+<script type="text/javascript">
+$('document').ready(function(){
+var canadaMedals = [
+
+/*
+  {
+    "Year":2014,
+    "Location":"Sochi",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"",
+    "8":"",
+    "9":"",
+    "10":"",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+*/
+
+    {
+    "Year":2010,
+    "Location":"Vancouver",
+    "1":"s",
+    "2":"g;b",
+    "3":"s",
+    "4":"g",
+    "5":"s",
+    "6":"g",
+    "7":"g",
+    "8":"",
+    "9":"s",
+    "10":"g",
+    "11":"g",
+    "12":"g;s;s;b",
+    "13":"g;b",
+    "14":"g;g;s;b",
+    "15":"g;g;g;b",
+    "16":"g"
+  },
+  {
+    "Year":2006,
+    "Location":"Turin",
+    "1":"g",
+    "2":"b",
+    "3":"",
+    "4":"s",
+    "5":"b",
+    "6":"s;s;b;b",
+    "7":"g;s;b",
+    "8":"",
+    "9":"s;s",
+    "10":"g",
+    "11":"",
+    "12":"g;g;s;s",
+    "13":"b",
+    "14":"g",
+    "15":"g;s;s;b",
+    "16":""
+  },
+  {
+    "Year":2002,
+    "Location":"Salt Lake City",
+    "1":"",
+    "2":"b",
+    "3":"g",
+    "4":"",
+    "5":"",
+    "6":"g",
+    "7":"g",
+    "8":"b",
+    "9":"",
+    "10":"s;b",
+    "11":"",
+    "12":"b;b",
+    "13":"g;b",
+    "14":"s",
+    "15":"g;g;s;b",
+    "16":"g"
+  },
+  {
+    "Year":1998,
+    "Location":"Nagano",
+    "1":"g",
+    "2":"",
+    "3":"s;b",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"g;s;s",
+    "8":"g;g;s",
+    "9":"",
+    "10":"s;b;b",
+    "11":"",
+    "12":"g;b",
+    "13":"",
+    "14":"g",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1994,
+    "Location":"Lillehammer",
+    "1":"b",
+    "2":"",
+    "3":"b",
+    "4":"g",
+    "5":"",
+    "6":"g",
+    "7":"s;s",
+    "8":"",
+    "9":"",
+    "10":"s;b",
+    "11":"g",
+    "12":"s;b",
+    "13":"",
+    "14":"s",
+    "15":"s",
+    "16":""
+  },
+  {
+    "Year":1992,
+    "Location":"Albertville",
+    "1":"",
+    "2":"",
+    "3":"b",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"g",
+    "8":"",
+    "9":"",
+    "10":"",
+    "11":"b",
+    "12":"g;s",
+    "13":"",
+    "14":"s",
+    "15":"s",
+    "16":""
+  },
+  {
+    "Year":1988,
+    "Location":"Calgary",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"b",
+    "7":"s",
+    "8":"",
+    "9":"b",
+    "10":"b",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"s",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1984,
+    "Location":"Sarajevo",
+    "1":"",
+    "2":"b",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"g",
+    "7":"",
+    "8":"g;s",
+    "9":"",
+    "10":"",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1980,
+    "Location":"Lake Placid",
+    "1":"",
+    "2":"b",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"s",
+    "8":"",
+    "9":"",
+    "10":"",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1976,
+    "Location":"Innsbruck",
+    "1":"",
+    "2":"",
+    "3":"s",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"",
+    "8":"b",
+    "9":"",
+    "10":"g",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1972,
+    "Location":"Sapporo",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"s",
+    "6":"",
+    "7":"",
+    "8":"",
+    "9":"",
+    "10":"",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1968,
+    "Location":"Grenoble",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"s",
+    "8":"",
+    "9":"g",
+    "10":"",
+    "11":"b",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1964,
+    "Location":"Innsbruck",
+    "1":"s",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"b",
+    "6":"",
+    "7":"",
+    "8":"",
+    "9":"",
+    "10":"g",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1960,
+    "Location":"Squaw Valley",
+    "1":"g",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"",
+    "8":"g;b",
+    "9":"",
+    "10":"s",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1956,
+    "Location":"Cortina D'Ampezzo",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"b",
+    "8":"",
+    "9":"s",
+    "10":"b",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1952,
+    "Location":"Oslo",
+    "1":"",
+    "2":"b",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"",
+    "8":"",
+    "9":"",
+    "10":"",
+    "11":"g",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1948,
+    "Location":"St. Moritz",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"g",
+    "8":"b",
+    "9":"",
+    "10":"g",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1936,
+    "Location":"Garmisch-Partenkirchen",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"",
+    "8":"",
+    "9":"",
+    "10":"",
+    "11":"s",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1932,
+    "Location":"Lake Placid",
+    "1":"b;b",
+    "2":"s;b",
+    "3":"",
+    "4":"",
+    "5":"b",
+    "6":"b",
+    "7":"",
+    "8":"",
+    "9":"",
+    "10":"g",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1928,
+    "Location":"St. Moritz",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"",
+    "8":"",
+    "9":"g",
+    "10":"",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  },
+  {
+    "Year":1924,
+    "Location":"Chamonix",
+    "1":"",
+    "2":"",
+    "3":"",
+    "4":"",
+    "5":"",
+    "6":"",
+    "7":"",
+    "8":"",
+    "9":"g",
+    "10":"",
+    "11":"",
+    "12":"",
+    "13":"",
+    "14":"",
+    "15":"",
+    "16":""
+  }
+];
+	
+// Fixed variables
+	var width = 550,
+		height = canadaMedals.length*235,
+		size = 19,
+		maxBorder = width-size,
+		spacing = 10,
+		ySpacing = spacing,
+		trackerHeight = 150;
+
+// Arrays
+	var colours = ['white','#9d5e1a','#b4b4b4','#e3c01b'],
+		medalNames = ['','b','s','g'],
+		strokeColours = ['#c2c2c2','#724718','#9a9696','#c9ab20'],
+		years = [],
+		medalsByYear = [];
+
+// Variables that change
+	getXCountStart = function(){
+		return (width/2)/(size+spacing)
+	}
+	var xCount = getXCountStart(),
+		yCount = 0,
+		rowLength = 0;
+		xAlt = false,
+		lastGender = 0,
+		xStart = 2,
+		lastDay = -1;
+		
+// Process data
+	var newData = [];
+	$.each(canadaMedals,function(i,d){
+		newData.push({
+	    "Year":d.Year,
+	    "Location":d.Location,
+	    "Medals":{
+	    "1":d[1].split(';'),
+	    "2":d[2].split(';'),
+	    "3":d[3].split(';'),
+	    "4":d[4].split(';'),
+	    "5":d[5].split(';'),
+	    "6":d[6].split(';'),
+	    "7":d[7].split(';'),
+	    "8":d[8].split(';'),
+	    "9":d[9].split(';'),
+	    "10":d[10].split(';'),
+	    "11":d[11].split(';'),
+	    "12":d[12].split(';'),
+	    "13":d[13].split(';'),
+	    "14":d[14].split(';'),
+	    "15":d[15].split(';'),
+	    "16":d[16].split(';')
+	   }
+	  });
+	})
+
+// Create the canvas
+	var svg = d3.select("#viz").selectAll("svg")
+			.data(d3.range(0,1))
+		.enter().append("svg")
+			.attr("width",width)
+			.attr("height",height);
+
+// Move to front function	
+	d3.selection.prototype.moveToFront = function() {
+	  return this.each(function(){
+	    this.parentNode.appendChild(this);
+	  });
+	};
+
+// Coordinate functions 
+	var lastPerson = '';
+	function getX(d,i){
+		// If a new day, go across
+		if(i != lastDay){
+			xCount++, yCount = yCountTracker*(count);
+		}
+		var returnX = (size*xCount)+(spacing*xCount);
+		if(d!= '') lastDay = i;
+		return returnX;
+	}
+	function getY(d,i){
+		var returnY = (yCount*size)+(ySpacing*yCount);
+		if(d != '') yCount--;
+		// If a medal, go up
+		return returnY;
+	}
+
+// Create the nodes
+	var count = 1,
+		yCountTracker = 8,
+		nodes = [];
+	$.each(newData,function(k,data){
+		xCount = 2,
+		yCount = (yCountTracker*(count+1));
+		lastDay = -1;
+		$.each(data.Medals,function(j,dat){
+			// Append Circles
+			var node = svg.selectAll('.node')
+				.data(dat).enter().append('g')
+			.attr('transform',function(d,i){ 
+				var yOffset = (size)//*11.25);
+				// Get XY
+				var xy = [getX(d,j),(getY(d,j))];
+	
+				// Store coordinates and medal count for later
+					// Store SVG # arrays
+					if(typeof nodes[count] == 'undefined') nodes[count] = [];
+					// Store X position array
+					if(typeof nodes[count][xy[0]] == 'undefined') nodes[count][xy[0]] = []; 
+					// Store item if it's a medal
+					if(d != '') nodes[count][xy[0]].push(d);
+	
+				// Return coordinates
+				return 'translate(' + xy[0]  + ',' + xy[1] + ')';}); 
+		})
+		count++;
+	});
+
+// Create legends and labels
+	count = 1;
+	for(i=0;i<newData.length;i++){
+		var data = newData[i];
+		xCount = 15,
+		yCount = (yCountTracker*(i+1));
+		lastDay = -1;
+		offset = size*1.5;
+		// Append x-axis line
+		svg.append('rect')
+			.attr('x',xCount*4)
+			.attr('y',function(){ return (yCount*size)+(ySpacing*yCount)+offset/2})
+			.attr('width',475)
+			.attr('height',1)
+			.attr('fill','#ececec');
+	
+		// Append x axis numbers
+		for(var n = 0;n<16;n++){
+			svg.append('text')
+				.text(n+1)
+				.attr('x',(size*(n+3))+(spacing*(n+3)))
+				.attr('y',(yCount*size)+(ySpacing*yCount)+offset)
+				.attr('text-anchor','middle')
+				.attr('font-family','sans-serif')
+				.attr('fill','#b0b0b0')
+				.attr('font-size',10);
+		}
+		// Append "Day" label
+		svg.append('text')
+			.text('DAY')
+			.attr('x',xCount*3.5)
+			.attr('y',(yCount*size)+(ySpacing*yCount)+offset)
+			.attr('text-anchor','end')
+			.attr('font-family','sans-serif')
+			.attr('fill','#b0b0b0')
+			.attr('font-size',10);
+		// Append year label
+		svg.append('text')
+			.text(data.Year)
+			.attr('x',xCount*3.5)
+			.attr('y',(yCount*size)+(ySpacing*yCount)-size+offset)
+			.attr('text-anchor','end')
+			.attr('font-family','sans-serif')
+			.attr('fill','black')
+			.attr('font-weight','bold')
+			.attr('font-size',10);
+		// Append tracker
+		svg.append('rect')
+			.attr('class','tracker')
+			.attr('x',xCount*4)
+			.attr('y',((yCount*size)+(ySpacing*yCount))-trackerHeight+offset)
+			.attr('height',150)
+			.attr('width',1)
+			.attr('fill','#ececec')
+			.attr('opacity',0);
+		// Append medal count text
+		svg.append('text')
+			.attr('x',xCount*4)
+			.attr('y',((yCount*size)+(ySpacing*yCount))-(trackerHeight+5)+offset)
+			.attr('class','tracker-text')
+			.attr('text-anchor','middle')
+			.attr('font-family','sans-serif')
+			.attr('fill','#333')
+			.attr('font-weight','bold')
+			.attr('font-size',10)
+			.text('medals')
+			.attr('opacity',0);
+		// Append "total" text
+		svg.append('text')
+			.attr('x',xCount*4)
+			.attr('y',((yCount*size)+(ySpacing*yCount))-(trackerHeight+5)+offset-10)
+			.attr('class','tracker-total')
+			.attr('text-anchor','middle')
+			.attr('font-family','sans-serif')
+			.attr('fill','#b0b0b0')
+			.attr('font-size',10)
+			.text('TOTAL')
+			.attr('opacity',0);
+		count++;
+	}
+	
+// Mousover fuctions
+	function getMouseoverXY(pos){
+		return (spacing+size)*Math.round((pos-(xStart*size))/(size+spacing))+(xStart*size)-(size/2);
+	}
+	function getTheseMedals(pos,y,which){
+			var matches = 0,
+				trackerMatches = 0;
+			if(pos == 57.5) pos = 87.5;
+			$.each(nodes, function(i,d){
+				if(typeof d != 'undefined' && i == y){
+					$.each(d,function(j,k){
+							if(typeof k != 'undefined' && j <= pos+.5+(size/2))	matches+=k.length, trackerMatches = k.length;					
+					})
+				}
+			});
+		if(which){
+			return trackerMatches;
+		} else {
+			if(matches == 1){
+				return matches + ' medal';
+			} else {
+				return matches + ' medals';
+			}
+		}
+	}
+	
+// Mouseover action
+	svg.on("mousemove",function(d){
+		yCount = 0;
+		svg.selectAll('.tracker')
+			.attr('x',function(){ var result = getMouseoverXY(d3.mouse(this)[0]); if(result<90){ return 86.5; } else if(result>522){ return 521.5 } else { return result; } })
+			.attr('height',function(){ yCount++; return trackerHeight-((getTheseMedals(getMouseoverXY(d3.mouse(this)[0]),yCount,true)*(size+spacing)+5))})
+			.attr('opacity',1);
+		
+		yCount = 0;
+		
+		svg.selectAll('.tracker-text')
+			.attr('x',function(){ var result = getMouseoverXY(d3.mouse(this)[0]);  if(result<90){ return 86.5; } else if(result>522){ return 521.5 } else { return result; } })
+			.text(function(d){ 
+				yCount++; return getTheseMedals(getMouseoverXY(d3.mouse(this)[0],false),yCount) })
+			.attr('opacity',1);
+				
+		svg.selectAll('.tracker-total')
+			.attr('x',function(){ var result = getMouseoverXY(d3.mouse(this)[0]);  if(result<90){ return 86.5; } else if(result>522){ return 521.5 } else { return result; } })
+			.attr('opacity',1);
+			
+	})
+
+// Append medals to nodes
+	svg.selectAll('g')
+		.append("circle")
+		.attr('class','circle')
+		.attr("r",function(d){ if(d==''){ return 0; } else { return size/2; }})
+		.attr("fill",function(d){ if(jQuery.inArray(d,medalNames) > -1) { return colours[jQuery.inArray(d,medalNames)]; } else { return '#ececec'; }})
+		.attr("stroke",function(d){ if(jQuery.inArray(d,medalNames) > -1) { return strokeColours[jQuery.inArray(d,medalNames)]; } else { return '#b0b0b0'; }; })
+		.attr("stroke-width","0.5");
+
+
+})
+</script>
+<p>
+<div id="gi-lede">
+<p>Expectations are high for Canada at the 2014 Winter Olympics in Sochi. Canada has earned more medals each Olympics since 1980. Will Canada beat its record-setting performance in Vancouver?</p>
+<p>Use this interactive tracker to see how Canada stacks up against previous Olympics by the number of medals earned each day. This year's results will be posted as they become available.</p>
+</div>
+<div id="viz-fallback"><img src="globeolympics-assets/globeolympics-all.png" width="100%" /></div>
+
+<div id="viz">
+	
+</div>
